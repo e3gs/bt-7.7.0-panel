@@ -400,39 +400,39 @@ var index = {
             }
             _this.get_server_info(rdata);
             if(rdata.installed === false) bt.index.rec_install();
-            if (rdata.user_info.status) {
-                var rdata_data = rdata.user_info.data;
-                bt.set_cookie('bt_user_info',JSON.stringify(rdata.user_info));
-                $(".bind-user").html(rdata_data.username);
-            }
-            else {
-                $(".bind-weixin a").attr("href", "javascript:;");
-                $(".bind-weixin a").click(function () {
-                    bt.msg({ msg: '请先绑定宝塔账号!', icon: 2 });
-                })
-            }
+            // if (rdata.user_info.status) {
+            //     var rdata_data = rdata.user_info.data;
+            //     bt.set_cookie('bt_user_info',JSON.stringify(rdata.user_info));
+            //     $(".bind-user").html(rdata_data.username);
+            // }
+            // else {
+            //     $(".bind-weixin a").attr("href", "javascript:;");
+            //     $(".bind-weixin a").click(function () {
+            //         bt.msg({ msg: '请先绑定宝塔账号!', icon: 2 });
+            //     })
+            // }
         })
         $('')
         setTimeout(function () { _this.get_index_list() },400)
         setTimeout(function () { _this.net.init() }, 500);
         setTimeout(function () { _this.iostat.init() }, 500);
-        setTimeout(function () { _this.get_warning_list()}, 600);
+        // setTimeout(function () { _this.get_warning_list()}, 600);
         setTimeout(function () { _this.interval.start()},700);
-        setTimeout(function () {
-            bt.system.check_update(function (rdata) {
-                index.consultancy_services(rdata.msg.adviser);
-                if (rdata.status !== false) {
-                    $('#toUpdate a').html('更新<i style="display: inline-block; color: red; font-size: 40px;position: absolute;top: -35px; font-style: normal; right: -8px;">.</i>');
-                    $('#toUpdate a').css("position", "relative");
+        // setTimeout(function () {
+        //     bt.system.check_update(function (rdata) {
+        //         index.consultancy_services(rdata.msg.adviser);
+        //         if (rdata.status !== false) {
+        //             $('#toUpdate a').html('更新<i style="display: inline-block; color: red; font-size: 40px;position: absolute;top: -35px; font-style: normal; right: -8px;">.</i>');
+        //             $('#toUpdate a').css("position", "relative");
 
-                }
-                if (rdata.msg.is_beta === 1) {
-                    $('#btversion').prepend('<span style="margin-right:5px;">Beta</span>');
-                    $('#btversion').append('<a class="btlink" href="https://www.bt.cn/bbs/forum-39-1.html" target="_blank">  [找Bug奖宝塔币]</a>');
-                }
+        //         }
+        //         if (rdata.msg.is_beta === 1) {
+        //             $('#btversion').prepend('<span style="margin-right:5px;">Beta</span>');
+        //             $('#btversion').append('<a class="btlink" href="https://www.bt.cn/bbs/forum-39-1.html" target="_blank">  [找Bug奖宝塔币]</a>');
+        //         }
 
-            }, false)
-        }, 700)
+        //     }, false)
+        // }, 700)
     },
     get_server_info: function(info) {
         // bt.system.get_total(function (info){

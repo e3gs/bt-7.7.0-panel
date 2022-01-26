@@ -34,7 +34,7 @@ sockets = Sockets(app)
 
 #import db
 dns_client = None
-app.config['DEBUG'] = os.path.exists('data/debug.pl')
+app.config['DEBUG'] = False
 
 #设置BasicAuth
 basic_auth_conf = 'config/basic_auth.json' 
@@ -233,8 +233,8 @@ def home():
 
     data = {}
     data['bind'] = False
-    if not os.path.exists('data/userInfo.json'):
-        data['bind'] = os.path.exists('data/bind.pl')
+    # if not os.path.exists('data/userInfo.json'):
+    #     data['bind'] = os.path.exists('data/bind.pl')
     data[public.to_string([112, 100])],data['pro_end'],data['ltd_end'] = get_pd()
     data['siteCount'] = public.M('sites').count()
     data['ftpCount'] = public.M('ftps').count()
@@ -627,7 +627,7 @@ def config(pdata = None):
         data['basic_auth']['value'] = public.getMsg('CLOSED')
         if data['basic_auth']['open']: data['basic_auth']['value'] = public.getMsg('OPENED')
         data['debug'] = ''
-        data['show_recommend'] = not os.path.exists('data/not_recommend.pl')
+        data['show_recommend'] = False
         if app.config['DEBUG']: data['debug'] = 'checked'
         data['is_local'] = ''
         if public.is_local(): data['is_local'] = 'checked'
@@ -917,10 +917,10 @@ def login():
                 referer_path = referer_tmp[-2]
             if route_path != '/'+referer_path:
                 public.set_error_num(num_key)
-                #return abort(404)
-                data = {}
-                data['lan'] = public.getLan('close')
-                return render_template('autherr.html',data=data)
+                return abort(404)
+                # data = {}
+                # data['lan'] = public.getLan('close')
+                # return render_template('autherr.html',data=data)
     session['admin_auth'] = True
     public.set_error_num(num_key,True)
     comReturn = common.panelSetup().init()
@@ -1082,69 +1082,6 @@ def down(token=None,fname=None):
     except: 
         return abort(404)
 
-
-@app.route('/public',methods=method_all)
-def panel_public():
-    #小程序控制接口
-    get = get_input()
-    try:
-        import panelWaf
-        panelWaf_data = panelWaf.panelWaf()
-        if panelWaf_data.is_sql(get.__dict__):return 'ERROR'
-        if panelWaf_data.is_xss(get.__dict__):return 'ERROR'
-    except:
-        pass
-
-    if len("{}".format(get.__dict__)) > 1024 * 32:
-        return 'ERROR'
-
-    get.client_ip = public.GetClientIp()
-    num_key = get.client_ip + '_wxapp'
-    if not public.get_error_num(num_key,10):
-        return public.returnMsg(False,'连续10次认证失败，禁止1小时')
-    if not hasattr(get,'name'): get.name = ''
-    if not hasattr(get,'fun'): return abort(404)
-    if not public.path_safe_check("%s/%s" % (get.name,get.fun)): return abort(404)
-    if get.fun in ['scan_login', 'login_qrcode', 'set_login', 'is_scan_ok', 'blind','static']:
-        if get.fun == 'static':
-            if not 'filename' in get: return abort(404)
-            if not public.path_safe_check("%s" % (get.filename)): return abort(404)
-            s_file = '/www/server/panel/BTPanel/static/' + get.filename
-            if s_file.find('..') != -1 or s_file.find('./') != -1: return abort(404)
-            if not os.path.exists(s_file): return abort(404)
-            return send_file(s_file, conditional=True, add_etags=True)
-
-        #检查是否验证过安全入口
-        if get.fun in ['login_qrcode','is_scan_ok']:
-            global admin_check_auth,admin_path,route_path,admin_path_file
-            if admin_path != '/bt' and os.path.exists(admin_path_file) and  not 'admin_auth' in session: 
-                return 'False'
-        import wxapp
-        pluwx = wxapp.wxapp()
-        checks = pluwx._check(get)
-        if type(checks) != bool or not checks: 
-            public.set_error_num(num_key)
-            return public.getJson(checks),json_header
-        data = public.getJson(eval('pluwx.'+get.fun+'(get)'))
-        return data,json_header
-    
-    if get.name != 'app': return abort(404)
-    import panelPlugin
-    plu = panelPlugin.panelPlugin()
-    get.s = '_check'
-    checks = plu.a(get)
-    if type(checks) != bool or not checks: 
-        public.set_error_num(num_key)
-        return public.getJson(checks),json_header
-    get.s = get.fun
-    comm.setSession()
-    comm.init()
-    comm.checkWebType()
-    comm.GetOS()
-    result = plu.a(get)
-    #session.clear()
-    public.set_error_num(num_key,True)
-    return public.getJson(result),json_header
 
 @app.route('/favicon.ico',methods=method_get)
 def send_favicon():

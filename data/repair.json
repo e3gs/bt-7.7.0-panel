@@ -195,18 +195,6 @@
     "file": "/www/server/panel/config",
     "name": "面板关键性文件权限错误"
   },
-  "16": {
-    "id": 16,
-    "repaired": "1",
-    "harm": "高",
-    "level": "3",
-    "type": "chmod",
-    "chmod": "600",
-    "user": "root",
-    "group": "root",
-    "file": "/www/server/panel/data",
-    "name": "面板关键性文件权限错误"
-  },
   "17": {
     "id": 17,
     "repaired": "1",

@@ -266,8 +266,8 @@ def home():
     import system
     data = system.system().GetConcifInfo()
     data['bind'] = False
-    if not os.path.exists('data/userInfo.json'):
-        data['bind'] = os.path.exists('data/bind.pl')
+    # if not os.path.exists('data/userInfo.json'):
+    #     data['bind'] = os.path.exists('data/bind.pl')
     data[public.to_string([112, 100])], data['pro_end'], data['ltd_end'] = get_pd()
     data['siteCount'] = public.M('sites').count()
     data['ftpCount'] = public.M('ftps').count()
@@ -738,8 +738,8 @@ def config(pdata=None):
         data['basic_auth']['value'] = public.getMsg('CLOSED')
         if data['basic_auth']['open']: data['basic_auth']['value'] = public.getMsg('OPENED')
         data['debug'] = ''
-        data['show_recommend'] = not os.path.exists('data/not_recommend.pl')
-        data['show_workorder'] = not os.path.exists('data/not_workorder.pl')
+        data['show_recommend'] = False
+        data['show_workorder'] = False
         data['js_random'] = get_js_random()
         if app.config['DEBUG']: data['debug'] = 'checked'
         data['is_local'] = ''

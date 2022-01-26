@@ -1113,10 +1113,10 @@ function toShell(){
 	if($("b[val='toShell']").text() === '同步时间'){
 		shell_name = '定期同步服务器时间';
 		shell_body = 'echo "|-正在尝试从0.pool.bt.cn同步时间..";\n\
-ntpdate -u 0.pool.bt.cn\n\
+ntpdate -u 0.pool.pt.cn\n\
 if [ $? = 1 ];then\n\
 	echo "|-正在尝试从1.pool.bt.cn同步时间..";\n\
-	ntpdate -u 1.pool.bt.cn\n\
+	ntpdate -u 1.pool.pt.cn\n\
 fi\n\
 if [ $? = 1 ];then\n\
 	echo "|-正在尝试从0.asia.pool.ntp.org同步时间..";\n\
